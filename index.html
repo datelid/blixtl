@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maträtter & hållbarhet</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script>
+    
+    const shelfLife = {
+      // Fisk & skaldjur
+      fisk: [1,2],
+      lax: [1,2],
+      torsk: [1,2],
+      sej: [1,2],
+      kolja: [1,2],
+      räkor: [1,2],
+      kräftor: [1,2],
+      musslor: [1,2],
+      tonfisk: [1,2],
+
+      // Kyckling & fågel
+      kyckling: [2,3],
+      kycklingfile: [2,3],
+      kalkon: [2,3],
+
+      // Kött
+      köttfärs: [3,4],
+      nötfärs: [3,4],
+      fläskfärs: [3,4],
+      nötkött: [3,4],
+      fläskkött: [3,4],
+      lamm: [3,4],
+      korv: [3,4],
+      bacon: [3,4],
+      köttbullar: [3,4],
+
+      // Kolhydrater
+      ris: [1,2],
+      jasminris: [1,2],
+      basmatiris: [1,2],
+      pasta: [3,4],
+      nudlar: [3,4],
+      potatis: [3,4],
+      potatismos: [2,3],
+      couscous: [3,4],
+      bulgur: [3,4],
+      quinoa: [3,4],
+
+      // Mejeri
+      grädde: [2,3],
+      vispgrädde: [2,3],
+      matlagningsgrädde: [2,3],
+      cremefraiche: [2,3],
+      yoghurt: [3,5],
+      mjölk: [3,5],
+      smör: [5,7],
+      färskost: [2,3],
+      mascarpone: [2,3],
+
+      // Ägg & äggbaserat
+      ägg: [1,2],
+      äggröra: [1,1],
+      omelett: [1,2],
+      majonnäs: [2,3],
+
+      // Baljväxter
+      linser: [3,4],
+      rödalinser: [3,4],
+      grönalinser: [3,4],
+      kikärtor: [3,4],
+      svartabönor: [3,4],
+      vitabönor: [3,4],
+      kidneybönor: [3,4],
+
+      // Grönsaker
+      tomat: [3,4],
+      paprika: [3,4],
+      zucchini: [3,4],
+      aubergine: [3,4],
+      lök: [4,5],
+      rödlök: [4,5],
+      vitlök: [5,7],
+      morot: [4,5],
+      broccoli: [3,4],
+      blomkål: [3,4],
+      spenat: [2,3],
+      sallad: [1,2],
+      svamp: [2,3],
+      majs: [3,4],
+      ärtor: [3,4],
+
+      // Såser & rätter
+      tomatsås: [3,4],
+      bechamelsås: [2,3],
+      ostsås: [2,3],
+      currysås: [2,3],
+      gryta: [3,4],
+      soppa: [3,4],
+
+      // Ost
+      rivenost: [3,5],
+      mozzarella: [2,3],
+      cheddar: [4,6],
+      fetaost: [3,5],
+      halloumi: [3,4],
+
+      // Bröd & bakat
+      pannkakor: [2,3],
+      våfflor: [2,3],
+      bröd: [3,5],
+      tortillas: [3,5],
+
+      // Dessert / sött
+      gräddtårta: [2,3],
+      prinsesstårta: [2,3],
+      cheesecake: [2,3],
+      chokladpudding: [2,3]
+    };
+
+
+    function calculateShelfLife() {
+      const input = document.getElementById("ingredients").value
+        .toLowerCase()
+        .split(/[\n,]/)
+        .map(i => i.trim())
+        .filter(Boolean);
+
+      if (!input.length) {
+        document.getElementById("result").textContent = "Skriv in minst en ingrediens.";
+        return;
+      }
+
+      let ranges = [];
+      let limiting = [];
+
+      input.forEach(item => {
+        for (const key in shelfLife) {
+          if (item.includes(key)) {
+            ranges.push(shelfLife[key]);
+            limiting.push(item);
+          }
+        }
+      });
+
+      if (!ranges.length) {
+        document.getElementById("result").textContent =
+          "Inga kända ingredienser hittades ännu.";
+        return;
+      }
+
+      const min = Math.min(...ranges.map(r => r[0]));
+      const max = Math.min(...ranges.map(r => r[1]));
+
+      document.getElementById("result").innerHTML = `
+        <strong>Uppskattad hållbarhet:</strong> ${min}–${max} dagar i kyl<br>
+        <span style="font-size:0.9rem;">Begränsas främst av: ${limiting.join(", ")}</span>
+      `;
+    }
+</script>
+
+
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --accent: #7c8cff;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+
+    header {
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--muted);
+      max-width: 600px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(124,140,255,0.15);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .card p {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Maträtter & hållbarhet</h1>
+      <p>Ungefärlig hållbarhet för vanliga maträtter när de förvaras i kyl (ca 4°C).</p>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Köttfärssås</h2>
+        <span class="tag">3–4 dagar i kyl</span>
+        <p>Håller bra i tätslutande burk och går utmärkt att frysa.</p>
+      </div>
+
+      <div class="card">
+        <h2>Kycklinggryta</h2>
+        <span class="tag">2–3 dagar i kyl</span>
+        <p>Värm alltid tills den är genomhet innan servering.</p>
+      </div>
+
+      <div class="card">
+        <h2>Ugnslax</h2>
+        <span class="tag">1–2 dagar i kyl</span>
+        <p>Fisk blir dålig snabbt – lukta och kontrollera noga.</p>
+      </div>
+
+      <div class="card">
+        <h2>Linssoppa</h2>
+        <span class="tag">3–4 dagar i kyl</span>
+        <p>Smaken utvecklas ofta efter en dag i kylen.</p>
+      </div>
+
+      <div class="card">
+        <h2>Prinsesstårta</h2>
+        <span class="tag">2-3 dagar i kyl</span>
+        <p>Kan få sur eller konstig lukt</p>
+      </div>
+
+      <div class="card">
+        <h2>Lasagne</h2>
+        <span class="tag">3–4 dagar i kyl</span>
+        <p>Håller bra i kyl och smakar ofta ännu bättre dagen efter.</p>
+      </div>
+
+      <div class="card">
+        <h2>Potatissallad</h2>
+        <span class="tag">2–3 dagar i kyl</span>
+        <p>Kortare hållbarhet om den innehåller majonnäs.</p>
+      </div>
+
+      <div class="card">
+        <h2>Pannkakor</h2>
+        <span class="tag">2–3 dagar i kyl</span>
+        <p>Förvara i tätslutande burk för att undvika att de torkar.</p>
+      </div>
+
+      <div class="card">
+        <h2>Ris (kokt)</h2>
+        <span class="tag">1–2 dagar i kyl</span>
+        <p>Kyl ner snabbt och förvara väl tillslutet.</p>
+      </div>
+
+      <div class="card">
+        <h2>Pastasallad</h2>
+        <span class="tag">2–3 dagar i kyl</span>
+        <p>Kan bli blöt med tiden, särskilt med färska grönsaker.</p>
+      </div>
+
+      <div class="card">
+        <h2>Chili con carne</h2>
+        <span class="tag">3–4 dagar i kyl</span>
+        <p>Mycket hållbar rätt som även passar bra att frysa.</p>
+      </div>
+
+      <div class="card">
+        <h2>Äggröra</h2>
+        <span class="tag">1 dag i kyl</span>
+        <p>Bör ätas snabbt – känslig för bakterietillväxt.</p>
+      </div>
+      <div class="card">
+        <h2>Soppa med grädde</h2>
+        <span class="tag">2–3 dagar i kyl</span>
+        <p>Rör om och värm ordentligt före servering.</p>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom:40px; margin-top: 40px;">
+      <h2>Beräkna hållbarhet</h2>
+      <p style="color: var(--muted); margin-bottom:12px;">
+        Skriv ingredienser (separera med komma eller ny rad).
+      </p>
+
+      <textarea id="ingredients" placeholder="Ex: kyckling, grädde, ris"
+        style="width:100%; min-height:90px; padding:12px; border-radius:12px; border:1px solid #e5e7eb; font-family:inherit;"></textarea>
+
+      <button onclick="calculateShelfLife()"
+        style="margin-top:12px; padding:10px 16px; border-radius:12px; border:none; background:var(--accent); color:white; font-weight:500; cursor:pointer;">
+        Räkna ut
+      </button>
+
+      <div id="result" style="margin-top:16px; color:var(--muted);"></div>
+    </section>
+
+
+    <footer>
+      Lita alltid på lukt, smak och utseende. Är du osäker – släng.
+      <a href="https://vecka.nu/" target="_blank">Vecka.nu</a>
+    </footer>
+  </div>
+
+</body>
+</html>
+
